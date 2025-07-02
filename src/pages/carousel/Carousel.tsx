@@ -13,13 +13,7 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/free-mode";
 
-const images = [
-  heroImg1,
-  heroImg2,
-  heroImg3,
-  heroImg4,
-  heroImg5,
-];
+const images = [heroImg1, heroImg2, heroImg3, heroImg4, heroImg5];
 
 const Carousel: React.FC = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
