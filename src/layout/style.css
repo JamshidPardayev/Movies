@@ -1,0 +1,10 @@
+
+.navActive.active{
+    color: #C61F1F;
+    font-weight: bold;
+}
+.navActive:hover{
+    color: #C61F1F;
+    cursor: pointer;
+    transition: .3s ease-in-out;
+}
