@@ -14,7 +14,7 @@ const Movies = () => {
     page: 1,
     without_genres: "18,36,27,10749",
   });
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <div>Loading.....</div>;
   if (isError) return <div>Error: {error.message}</div>;
 
   console.log(genreData);
