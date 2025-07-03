@@ -10,7 +10,10 @@ const MovieView: FC<Props> = ({ data }) => {
   return (
     <div className="container mx-auto grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-5 max-sm:gap-2">
       {data?.map((movie: IMovie) => (
-        <div className="dark:bg-slate-900 bg-gray-200 rounded-[12px] border border-gray-400" key={movie.id}>
+        <div
+          className="dark:bg-slate-900 bg-gray-200 rounded-[12px] border border-gray-400"
+          key={movie.id}
+        >
           <div>
             <img
               className="rounded-[12px]"

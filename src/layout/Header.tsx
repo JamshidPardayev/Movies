@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "@/assets/main-logo.svg";
 import {
   HeartOutlined,
@@ -36,7 +36,9 @@ const Header = () => {
   return (
     <div className="shadow shadow-gray-400 dark:shadow-slate-900 mb-5 relative z-50">
       <div className="container flex justify-between items-center h-[80px]">
-        <img src={logo} alt="Logo" />
+        <Link to={"/"}>
+          <img src={logo} alt="Logo" />
+        </Link>
 
         <div className="flex gap-6 text-[16px] font-semibold max-sm:hidden">
           <NavLink to="/" className="navActive flex flex-col items-center">
