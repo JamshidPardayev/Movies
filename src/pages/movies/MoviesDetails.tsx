@@ -1,19 +1,20 @@
 import React from "react";
 import { useMovie } from "@/api/hooks/useMovie";
 import { useGenre } from "@/api/hooks/useGenre";
-import MovieView from "@/components/movie-view/MovieView";
-import { useNavigate, useParams } from "react-router-dom";
 import { IMAGE_URL } from "@/const";
+import { useNavigate, useParams } from "react-router-dom";
 import defaultImg from "@/assets/default.jpg";
 import userImg2 from "@/assets/userImg.png";
 import { CheckCircleOutlined, StarFilled } from "@ant-design/icons";
 import { Image } from "antd";
+import MovieView from "@/components/movie-view/MovieView";
 
 const MoviesDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+
   const { getMovieDetails, getMovieDetailSimilars } = useMovie();
-  const { genres: genreData, genreMap } = useGenre();
+  const { genreMap } = useGenre();
 
   const { data } = getMovieDetails(id || "");
   const { data: similarData } = getMovieDetailSimilars(id || "", "similar");
@@ -29,58 +30,71 @@ const MoviesDetails = () => {
 
   return (
     <div className="container">
+      {/* Movie Poster & Info */}
       <div className="flex justify-between gap-6 max-sm:flex-col">
-        <div className="w-[50%] max-sm:w-[100%] overflow-hidden rounded shadow">
+        <div className="w-[50%] max-sm:w-[100%] overflow-hidden rounded border-gray-400 dark:border-violet-700 shadow">
           <img
             src={data.backdrop_path ? IMAGE_URL + data.backdrop_path : defaultImg}
             alt={data.title}
-            className="w-full h-full object-cover rounded"
+            className="w-full h-full object-cover rounded hover:scale-105 duration-300 cursor-pointer"
           />
         </div>
 
-        <div className="w-[50%] max-sm:w-[100%] flex flex-col gap-2 px-2 py-1">
+        <div className="w-[50%] max-sm:w-[100%] flex flex-col px-2 py-1 shadow border-gray-400">
           <h1 className="text-[28px] font-semibold">{data.title}</h1>
           <p className="text-[18px] font-medium">{data.tagline}</p>
-          <p className="text-[15px]">{data.overview}</p>
+          <p className="text-[15px] dark:text-gray-300 text-gray-800">{data.overview}</p>
 
-          <div className="flex gap-x-2 flex-wrap font-medium">
-            <span>Companies:</span>
-            {data.production_companies?.map((c, i) => (
-              <span key={c.id}>
+          {/* Production Companies */}
+          <div className="flex gap-x-2 flex-wrap font-medium dark:text-gray-300 text-gray-800 mt-2">
+            <span className="dark:text-white text-black">Companies:</span>
+            {data.production_companies?.map((c: any, i: number) => (
+              <div key={c.id}>
                 {c.name}
-                {i < data.production_companies.length - 1 && ","}
-              </span>
+                {i !== data.production_companies.length - 1 ? "," : ""}
+              </div>
             ))}
           </div>
 
-          <div className="flex gap-x-2 flex-wrap font-medium">
-            <span>Countries:</span>
-            {data.production_countries?.map((c, i) => (
-              <span key={c.iso_3166_1}>
+          {/* Countries */}
+          <div className="flex gap-x-2 flex-wrap font-medium dark:text-gray-300 text-gray-800 mt-1">
+            <span className="dark:text-white text-black">Countries:</span>
+            {data.production_countries?.map((c: any, i: number) => (
+              <p key={c.iso_3166_1}>
                 {c.name}
-                {i < data.production_countries.length - 1 && ","}
-              </span>
+                {i !== data.production_countries.length - 1 ? "," : ""}
+              </p>
             ))}
           </div>
 
-          <div className="flex gap-4 font-medium">
-            <span>Release:</span>
-            <span>{data.release_date}</span>
-            <span>
-              Runtime: {Math.floor(data.runtime / 60)}h {data.runtime % 60}min
-            </span>
+          {/* Release & Runtime */}
+          <div className="flex flex-wrap gap-4 dark:text-gray-300 text-gray-800 font-medium mt-1">
+            <span className="dark:text-white text-black">Release:</span>
+            <p>{data.release_date}</p>
+            <span className="dark:text-white text-black">Runtime:</span>
+            <p>
+              {Math.floor(data.runtime / 60)}h {data.runtime % 60}min
+            </p>
           </div>
 
-          <div className="flex gap-4 font-medium">
-            {data.budget > 0 && (
-              <span>Budget: {data.budget.toLocaleString()} $</span>
+          {/* Budget & Revenue */}
+          <div className="flex flex-wrap gap-4 dark:text-gray-300 text-gray-800 mt-1">
+            {data.budget && (
+              <p>
+                <span className="dark:text-white text-black">Budget:</span>{" "}
+                {data.budget.toLocaleString()} $
+              </p>
             )}
-            {data.revenue > 0 && (
-              <span>Revenue: {data.revenue.toLocaleString()} $</span>
+            {data.revenue && (
+              <p>
+                <span className="dark:text-white text-black">Revenue:</span>{" "}
+                {data.revenue.toLocaleString()} $
+              </p>
             )}
           </div>
 
-          <div className="flex gap-8">
+          {/* Ratings */}
+          <div className="flex gap-8 mt-2">
             <p className="flex gap-1 items-center">
               {data.vote_average}
               <StarFilled />
@@ -93,11 +107,12 @@ const MoviesDetails = () => {
         </div>
       </div>
 
+      {/* Movie Images */}
       <div className="mt-8">
         <h2 className="text-[24px] mb-2 text-center">Scenes from the Movie</h2>
         <div className="flex gap-2 overflow-x-auto pb-2 custom-scroll">
-          {imagesData?.backdrops?.map((item: any, inx: number) => (
-            <div key={inx} className="w-full">
+          {imagesData?.backdrops?.map((item: any, i: number) => (
+            <div key={i} className="w-full">
               <Image
                 width={120}
                 src={IMAGE_URL + item.file_path}
@@ -109,23 +124,24 @@ const MoviesDetails = () => {
         </div>
       </div>
 
-      <div>
-        <h2 className="text-[24px] mb-4 text-center font-semibold">
-          Actors from the Movie
-        </h2>
+      {/* Cast */}
+      <div className="mt-8">
+        <h2 className="text-[24px] mb-4 text-center font-semibold">Actors from the Movie</h2>
         <div className="flex gap-2 overflow-x-auto custom-scroll py-2">
           {creditsData?.cast?.map((actor: any) => (
             <div
               onClick={() => navigate(`/actor/${actor.id}`)}
               key={actor.id}
-              className="min-w-[120px] bg-white dark:bg-gray-800 p-1 rounded shadow-md text-center"
+              className="min-w-[120px] bg-white dark:bg-gray-800 p-1 rounded shadow-md text-center cursor-pointer"
             >
               <img
                 src={actor.profile_path ? IMAGE_URL + actor.profile_path : userImg2}
-                alt={actor.name}
+                alt={actor.name || "Actor image"}
                 className="w-full h-[120px] object-cover mb-2"
               />
-              <h3 className="text-md font-medium line-clamp-1">{actor.original_name}</h3>
+              <h3 className="text-md font-medium text-gray-900 dark:text-white line-clamp-1">
+                {actor.original_name}
+              </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
                 {actor.character}
               </p>
@@ -134,6 +150,7 @@ const MoviesDetails = () => {
         </div>
       </div>
 
+      {/* Similar Movies */}
       <div className="mt-8">
         <h2 className="text-[24px] mb-2 text-center">Similar Movies</h2>
         <MovieView data={similarData?.results?.slice(0, 4)} genreMap={genreMap} />
