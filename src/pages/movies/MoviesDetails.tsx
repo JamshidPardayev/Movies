@@ -32,7 +32,7 @@ const MoviesDetails = () => {
     <div className="container">
       {/* Movie Poster & Info */}
       <div className="flex justify-between gap-6 max-sm:flex-col">
-        <div className="w-[50%] max-sm:w-[100%] overflow-hidden rounded border-gray-400 dark:border-violet-700 shadow">
+        <div className="w-[50%] max-sm:w-[100%] overflow-hidden rounded border border-gray-400 dark:border-violet-700 shadow-[0px_0px_4px_2px_#999999] dark:shadow-[0px_0px_4px_2px_#a752f7] ">
           <img
             src={data.backdrop_path ? IMAGE_URL + data.backdrop_path : defaultImg}
             alt={data.title}
@@ -40,7 +40,7 @@ const MoviesDetails = () => {
           />
         </div>
 
-        <div className="w-[50%] max-sm:w-[100%] flex flex-col px-2 py-1 shadow border-gray-400">
+        <div className="w-[50%] max-sm:w-[100%] flex flex-col px-2 py-1 border-gray-400 dark:border-violet-700 shadow-[0px_0px_4px_2px_#999999] dark:shadow-[0px_0px_4px_2px_#a752f7] ">
           <h1 className="text-[28px] font-semibold">{data.title}</h1>
           <p className="text-[18px] font-medium">{data.tagline}</p>
           <p className="text-[15px] dark:text-gray-300 text-gray-800">{data.overview}</p>

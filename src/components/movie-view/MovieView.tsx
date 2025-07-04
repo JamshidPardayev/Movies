@@ -19,11 +19,11 @@ const MovieView: FC<Props> = ({ data, genreMap }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-5 max-sm:gap-2">
+    <div className="container grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-5 max-sm:gap-2">
       {data?.map((movie) => (
         <div
           key={movie.id}
-          className="relative group dark:bg-slate-900 bg-gray-200 rounded-[12px] border border-gray-400 dark:border-violet-700 hover:shadow-md"
+          className="relative group dark:bg-slate-900 bg-gray-200 rounded-[12px] border border-gray-400 dark:border-violet-700 hover:shadow-[0px_0px_4px_2px_#999999] hover:dark:shadow-[0px_0px_4px_2px_#a752f7]"
         >
           <div className="h-[400px] max-sm:h-[260px] overflow-hidden rounded-[12px]">
             <img

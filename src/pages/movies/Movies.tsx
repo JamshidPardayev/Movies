@@ -53,7 +53,7 @@ const Movies = () => {
   const { data, isPending, error, isError } = getMovies({
     page,
     with_genres: genreList.join(","),
-    without_genres: "18,36,27,10749", // Excluding drama, history, horror, romance
+    without_genres: "18,36,27,10749",
     ...(gte &&
       lte && {
         "primary_release_date.gte": `${gte}-01-01`,
@@ -63,7 +63,7 @@ const Movies = () => {
 
   if (isPending)
     return (
-      <div className="flex justify-center items-center text-xl">
+      <div className=" flex justify-center items-center text-xl">
         Loading... <span className="loader ml-3"></span>
       </div>
     );
@@ -88,7 +88,7 @@ const Movies = () => {
         />
       </div>
 
-      <div className="my-4 flex justify-end">
+      <div className="container my-4 flex justify-end">
         <select
           value={decade || ""}
           onChange={(e) => handleDecadeChange(e.target.value)}
