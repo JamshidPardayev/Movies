@@ -1,16 +1,17 @@
 import { useActors } from "@/api/hooks/useActors";
 import { IMAGE_URL } from "@/const";
 import React from "react";
-import { data, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import defaultImg from "@/assets/default.jpg";
 import MovieView from "@/components/movie-view/MovieView";
-
+import { useGenre } from "@/api/hooks/useGenre";
 const ActorDetails = () => {
   const { id } = useParams();
   const { getActorsDetails, getActorsMovie } = useActors();
   const { data: actor, isLoading, isError } = getActorsDetails(id || "");
   const { data: movies } = getActorsMovie(id || "");
   console.log(movies);
+  const { genreMap } = useGenre();
 
   if (isLoading || !actor) {
     return (
@@ -58,7 +59,7 @@ const ActorDetails = () => {
         <h2 className="text-2xl font-semibold text-center mt-6 mb-4">
           🎬 Movies with Actor
         </h2>
-        <MovieView data={movies?.cast?.slice(0,4)}/>
+        <MovieView data={movies?.cast?.slice(0, 4)} genreMap={genreMap} />
       </div>
     </div>
   );
