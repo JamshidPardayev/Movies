@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "..";
-import type { IGenre } from "@/types";
+import { IGenre } from "@/types"; // agar sizda IGenre tipi bo‘lsa
 
 export const useGenre = () => {
-  const { data } = useQuery<{ genres: IGenre[] }>({
+  const { data } = useQuery({
     queryKey: ["genre"],
     queryFn: () => api.get("genre/movie/list").then((res) => res.data),
   });
 
-  const genres = data?.genres || [];
+  const genres: IGenre[] = data?.genres || [];
 
   return {
-    genres,
-    genreMap: genres, // optional alias
+    genres, // array ko‘rinishida barcha janrlar
+    genreMap: genres, // map qilish uchun uzatiladi
   };
 };
