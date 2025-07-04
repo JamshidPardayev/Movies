@@ -9,7 +9,7 @@ interface Props {
 
 const Genre: FC<Props> = ({ data, selectedGenres, onToggle }) => {
   return (
-    <div className="flex overflow-auto gap-6 scrollbar-thin scrollbar-thumb-gray-400">
+    <div className="flex overflow-auto gap-6 scrollbar-thin scrollbar-thumb-gray-400 custom-scroll">
       {data?.map((item) => (
         <div
           key={item.id}

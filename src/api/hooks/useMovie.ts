@@ -2,14 +2,24 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "..";
 
 export const useMovie = () => {
-  const getMovies = (params: any) => {
-    const queryKey = ["movie", JSON.stringify(params)];
-
+  const getMovies = (params: Record<string, any>) => {
     return useQuery({
-      queryKey,
-      queryFn: () => api.get("discover/movie", { params }).then(res => res.data),
+      queryKey: ["movie", params],
+      queryFn: () =>
+        api.get("discover/movie", { params }).then((res) => res.data),
     });
   };
 
-  return { getMovies };
+  const getMovieDetails = (id: string) =>
+    useQuery({
+      queryKey: ["movie", id],
+      queryFn: () => api.get(`movie/${id}`).then((res) => res.data),
+    });
+  const getMovieDetailSimilars = (id: string, path: string) =>
+    useQuery({
+      queryKey: ["movie", id, path],
+      queryFn: () => api.get(`movie/${id}/${path}`).then((res) => res.data),
+    });
+
+  return { getMovies, getMovieDetails, getMovieDetailSimilars };
 };

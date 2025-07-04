@@ -11,6 +11,8 @@ export interface IMovie {
   total_pages: number,
   total_results: number,
   release_date: string,
+  runtime: number,
+
 }
 
 export interface IGenre {

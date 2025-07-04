@@ -10,6 +10,7 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/free-mode";
 import { PlayCircleFilled } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const IMAGE_URL = "https://image.tmdb.org/t/p/original";
 
@@ -18,6 +19,7 @@ interface Props {
 }
 
 const Carousel: React.FC<Props> = ({ genreMap }) => {
+  const navigate = useNavigate();
   const genreIdToName = new Map(genreMap?.map((g) => [g.id, g.name]));
 
   const { getMovies } = useMovie();
@@ -26,7 +28,12 @@ const Carousel: React.FC<Props> = ({ genreMap }) => {
 
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  if (!data) return <div className="text-center py-10">Loading...</div>;
+  if (!data)
+    return (
+      <div className="flex justify-center items-center text-center py-10">
+        Loading... <span className="loader ml-3"></span>
+      </div>
+    );
   return (
     <div className="w-full h-[650px] max-md:h-[530px] rounded-[16px] overflow-hidden mx-auto">
       <Swiper
@@ -67,7 +74,13 @@ const Carousel: React.FC<Props> = ({ genreMap }) => {
                   </span>{" "}
                   <br />
                 </div>
-                <button className="flex items-center justify-center gap-2 text-[18px] mx-auto mt-3 h-[50px] bg-white text-[#c61f1f] font-semibold w-[220px] rounded"><PlayCircleFilled /><p>Watch Film</p></button>
+                <button
+                  onClick={() => navigate(`/movie/${movie.id}`)}
+                  className="flex items-center justify-center gap-2 text-[18px] mx-auto mt-3 h-[50px] bg-white text-[#c61f1f] font-semibold w-[220px] rounded"
+                >
+                  <PlayCircleFilled />
+                  <p>Watch Film</p>
+                </button>
               </div>
             </div>
           </SwiperSlide>
