@@ -1,115 +1,158 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { CheckCircleOutlined, StarFilled } from "@ant-design/icons";
-import { Image } from "antd";
 import { useMovie } from "@/api/hooks/useMovie";
 import { useGenre } from "@/api/hooks/useGenre";
+import MovieView from "@/components/movie-view/MovieView";
 import { IMAGE_URL } from "@/const";
+import { useNavigate, useParams } from "react-router-dom";
 import defaultImg from "@/assets/default.jpg";
 import userImg2 from "@/assets/userImg.png";
-import MovieView from "@/components/movie-view/MovieView";
+import { CheckCircleOutlined, StarFilled } from "@ant-design/icons";
+import { Image } from "antd";
+
+interface IProductionCompany {
+  id: number;
+  name: string;
+}
+
+interface IProductionCountry {
+  iso_3166_1: string;
+  name: string;
+}
 
 const MoviesDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const { getMovieDetails, getMovieDetailSimilars } = useMovie();
-  const { data: movie } = getMovieDetails(id || "");
+
+  const { data } = getMovieDetails(id || "");
   const { data: similarData } = getMovieDetailSimilars(id || "", "similar");
   const { data: imagesData } = getMovieDetailSimilars(id || "", "images");
   const { data: creditsData } = getMovieDetailSimilars(id || "", "credits");
-  const { genreMap } = useGenre();
+  const { getGenres } = useGenre();
+  const { data: genreData } = getGenres();
 
-  if (!id || !movie)
+  if (!id || !data) {
     return (
-      <div className="text-center text-2xl">
-        Loading movie details... <span className="loader ml-2" />
+      <div className="text-2xl text-center content-center">
+        Loading movie details... <span className="loader ml-3" />
       </div>
     );
+  }
 
   return (
     <div className="container">
-      {/* Movie Banner + Info */}
+      {/* Movie Info */}
       <div className="flex justify-between gap-6 max-sm:flex-col">
-        <div className="w-[50%] max-sm:w-full">
+        <div className="w-[50%] max-sm:w-full overflow-hidden rounded border shadow-md">
           <img
-            src={movie.backdrop_path ? IMAGE_URL + movie.backdrop_path : defaultImg}
-            alt={movie.title}
-            className="w-full rounded shadow hover:scale-105 duration-300"
+            src={data.backdrop_path ? IMAGE_URL + data.backdrop_path : defaultImg}
+            alt={data.title}
+            className="w-full h-full object-cover rounded hover:scale-105 duration-300"
           />
         </div>
-        <div className="w-[50%] max-sm:w-full space-y-2">
-          <h1 className="text-3xl font-bold">{movie.title}</h1>
-          <p className="text-lg font-medium">{movie.tagline}</p>
-          <p>{movie.overview}</p>
-          <div>
-            <strong>Companies:</strong>{" "}
-            {movie.production_companies?.map((c) => c.name).join(", ")}
+        <div className="w-[50%] max-sm:w-full flex flex-col gap-2">
+          <h1 className="text-[28px] font-semibold">{data.title}</h1>
+          <p className="text-[18px] font-medium">{data.tagline}</p>
+          <p className="text-[15px]">{data.overview}</p>
+
+          <div className="flex gap-x-2 flex-wrap font-medium">
+            <span>Companies:</span>
+            {data.production_companies?.map((c: IProductionCompany, index: number) => (
+              <div key={c.id}>
+                {c.name}
+                {index !== data.production_companies.length - 1 ? "," : ""}
+              </div>
+            ))}
           </div>
-          <div>
-            <strong>Countries:</strong>{" "}
-            {movie.production_countries?.map((c) => c.name).join(", ")}
+
+          <div className="flex gap-x-2 flex-wrap font-medium">
+            <span>Countries:</span>
+            {data.production_countries?.map((c: IProductionCountry, index: number) => (
+              <div key={c.iso_3166_1}>
+                {c.name}
+                {index !== data.production_countries.length - 1 ? "," : ""}
+              </div>
+            ))}
           </div>
-          <div>
-            <strong>Release:</strong> {movie.release_date}
+
+          <div className="flex font-medium">
+            <span className="mr-2">Date:</span>
+            <p>{data.release_date}</p>
+            <span className="mx-4">Runtime:</span>
+            <p>{Math.floor(data.runtime / 60)}h {data.runtime % 60}min</p>
           </div>
-          <div>
-            <strong>Runtime:</strong> {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}min
+
+          <div className="flex font-medium">
+            {data.budget ? (
+              <p>
+                <span className="mr-2">Budget:</span>
+                {data.budget.toLocaleString()} $
+              </p>
+            ) : null}
+            {data.revenue ? (
+              <p className="ml-4">
+                <span className="mr-2">Revenue:</span>
+                {data.revenue.toLocaleString()} $
+              </p>
+            ) : null}
           </div>
-          <div>
-            {movie.budget ? <strong>Budget:</strong> : null} {movie.budget?.toLocaleString()}$
-            {" | "}
-            {movie.revenue ? <strong>Revenue:</strong> : null} {movie.revenue?.toLocaleString()}$
-          </div>
-          <div className="flex gap-6 mt-2">
-            <p className="flex items-center gap-1">{movie.vote_average} <StarFilled /></p>
-            <p className="flex items-center gap-1">{movie.vote_count} <CheckCircleOutlined /></p>
+
+          <div className="flex gap-8 font-medium">
+            <p className="flex items-center gap-1">
+              {data.vote_average}
+              <StarFilled />
+            </p>
+            <p className="flex items-center gap-1">
+              {data.vote_count}
+              <CheckCircleOutlined />
+            </p>
           </div>
         </div>
       </div>
 
       {/* Scenes */}
       <div className="mt-8">
-        <h2 className="text-2xl text-center mb-4">Scenes from the Movie</h2>
-        <div className="flex gap-2 overflow-x-auto custom-scroll pb-2">
-          {imagesData?.backdrops?.map((img: any, idx: number) => (
-            <Image
-              key={idx}
-              width={120}
-              src={IMAGE_URL + img.file_path}
-              className="rounded"
-              alt="scene"
-            />
+        <h2 className="text-[24px] mb-2 text-center">Scenes from the Movie</h2>
+        <div className="flex gap-2 overflow-x-auto pb-2 custom-scroll">
+          {imagesData?.backdrops?.map((item: any, idx: number) => (
+            <div key={idx}>
+              <Image
+                width={120}
+                src={IMAGE_URL + item.file_path}
+                alt="scene"
+                className="rounded object-cover"
+              />
+            </div>
           ))}
         </div>
       </div>
 
-      {/* Cast */}
+      {/* Actors */}
       <div className="mt-8">
-        <h2 className="text-2xl text-center mb-4">Actors from the Movie</h2>
-        <div className="flex gap-3 overflow-x-auto py-2 custom-scroll">
+        <h2 className="text-[24px] mb-4 text-center font-semibold">Actors from the Movie</h2>
+        <div className="flex gap-2 overflow-x-auto custom-scroll py-2">
           {creditsData?.cast?.map((actor: any) => (
             <div
               key={actor.id}
               onClick={() => navigate(`/actor/${actor.id}`)}
-              className="min-w-[120px] text-center bg-white dark:bg-gray-800 p-2 rounded shadow"
+              className="min-w-[120px] bg-white dark:bg-gray-800 p-1 rounded shadow-md text-center cursor-pointer"
             >
               <img
                 src={actor.profile_path ? IMAGE_URL + actor.profile_path : userImg2}
-                className="h-[120px] w-full object-cover rounded mb-2"
-                alt={actor.name}
+                alt={actor.name || "Actor"}
+                className="w-full h-[120px] object-cover mb-2 rounded"
               />
-              <p className="font-medium">{actor.original_name}</p>
-              <p className="text-sm text-gray-500">{actor.character}</p>
+              <h3 className="text-md font-medium line-clamp-1">{actor.original_name}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-300 line-clamp-1">{actor.character}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Similar Movies */}
-      <div className="mt-10">
-        <h2 className="text-2xl text-center mb-4">Similar Movies</h2>
-        <MovieView data={similarData?.results?.slice(0, 4)} genreMap={genreMap} />
+      <div className="mt-8">
+        <h2 className="text-[24px] mb-2 text-center">Similar Movies</h2>
+        <MovieView data={similarData?.results?.slice(0, 4)} genreMap={genreData?.genres} />
       </div>
     </div>
   );
