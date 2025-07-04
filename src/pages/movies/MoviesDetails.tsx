@@ -7,6 +7,7 @@ import { CheckCircleOutlined, StarFilled } from "@ant-design/icons";
 import { Image } from "antd";
 import MovieView from "@/components/movie-view/MovieView";
 import userImg2 from "@/assets/userImg.png";
+import { useGenre } from "@/api/hooks/useGenre";
 const MoviesDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -16,6 +17,7 @@ const MoviesDetails = () => {
   const { data: imagesData } = getMovieDetailSimilars(id || "", "images");
   const { data: creditsData } = getMovieDetailSimilars(id || "", "credits");
   console.log(creditsData);
+  const { genreMap } = useGenre();
 
   if (!id || !data)
     return (
@@ -159,7 +161,7 @@ const MoviesDetails = () => {
 
       <div className="mt-8">
         <h2 className="text-[24px] mb-2 text-center">Similar Movies</h2>
-        <MovieView data={similarData.results.slice(0, 4)} />
+        <MovieView data={similarData.results.slice(0, 4)} genreMap={genreMap} />
       </div>
     </div>
   );
