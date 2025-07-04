@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "..";
-import type { IGenre } from "@/types"; // ✅ type-only
+import type { IGenre } from "@/types";
 
 export const useGenre = () => {
   const { data } = useQuery({

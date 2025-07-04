@@ -45,7 +45,6 @@ const MoviesDetails = () => {
           <p className="text-[18px] font-medium">{data.tagline}</p>
           <p className="text-[15px] dark:text-gray-300 text-gray-800">{data.overview}</p>
 
-          {/* Production Companies */}
           <div className="flex gap-x-2 flex-wrap font-medium dark:text-gray-300 text-gray-800 mt-2">
             <span className="dark:text-white text-black">Companies:</span>
             {data.production_companies?.map((c: any, i: number) => (
@@ -56,7 +55,6 @@ const MoviesDetails = () => {
             ))}
           </div>
 
-          {/* Countries */}
           <div className="flex gap-x-2 flex-wrap font-medium dark:text-gray-300 text-gray-800 mt-1">
             <span className="dark:text-white text-black">Countries:</span>
             {data.production_countries?.map((c: any, i: number) => (
@@ -67,7 +65,6 @@ const MoviesDetails = () => {
             ))}
           </div>
 
-          {/* Release & Runtime */}
           <div className="flex flex-wrap gap-4 dark:text-gray-300 text-gray-800 font-medium mt-1">
             <span className="dark:text-white text-black">Release:</span>
             <p>{data.release_date}</p>
@@ -77,7 +74,6 @@ const MoviesDetails = () => {
             </p>
           </div>
 
-          {/* Budget & Revenue */}
           <div className="flex flex-wrap gap-4 dark:text-gray-300 text-gray-800 mt-1">
             {data.budget && (
               <p>
@@ -93,7 +89,6 @@ const MoviesDetails = () => {
             )}
           </div>
 
-          {/* Ratings */}
           <div className="flex gap-8 mt-2">
             <p className="flex gap-1 items-center">
               {data.vote_average}
@@ -107,7 +102,6 @@ const MoviesDetails = () => {
         </div>
       </div>
 
-      {/* Movie Images */}
       <div className="mt-8">
         <h2 className="text-[24px] mb-2 text-center">Scenes from the Movie</h2>
         <div className="flex gap-2 overflow-x-auto pb-2 custom-scroll">
@@ -124,7 +118,6 @@ const MoviesDetails = () => {
         </div>
       </div>
 
-      {/* Cast */}
       <div className="mt-8">
         <h2 className="text-[24px] mb-4 text-center font-semibold">Actors from the Movie</h2>
         <div className="flex gap-2 overflow-x-auto custom-scroll py-2">
@@ -150,7 +143,6 @@ const MoviesDetails = () => {
         </div>
       </div>
 
-      {/* Similar Movies */}
       <div className="mt-8">
         <h2 className="text-[24px] mb-2 text-center">Similar Movies</h2>
         <MovieView data={similarData?.results?.slice(0, 4)} genreMap={genreMap} />

@@ -5,7 +5,7 @@ import MovieView from "@/components/movie-view/MovieView";
 import Carousel from "../carousel/Carousel";
 
 const Home = () => {
-  const { genres } = useGenre(); // genreMap emas, genres arrayini olamiz
+  const { genres } = useGenre();
   const { getMovies } = useMovie();
 
   const { data, isPending, isError, error } = getMovies({
