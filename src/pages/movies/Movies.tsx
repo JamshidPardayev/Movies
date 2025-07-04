@@ -8,7 +8,7 @@ import { useParamsHook } from "@/hooks/useParamsHook";
 
 const Movies = () => {
   const { getMovies } = useMovie();
-  const { getGenres } = useGenre();
+  const { genres, genreMap } = useGenre();
   const { getParam, setParam } = useParamsHook();
 
   const genreParam = getParam("genre");
@@ -50,11 +50,10 @@ const Movies = () => {
     return options;
   };
 
-  const { data: genreData } = getGenres();
   const { data, isPending, error, isError } = getMovies({
     page,
     with_genres: genreList.join(","),
-    without_genres: "18,36,27,10749",
+    without_genres: "18,36,27,10749", // Excluding drama, history, horror, romance
     ...(gte &&
       lte && {
         "primary_release_date.gte": `${gte}-01-01`,
@@ -62,8 +61,19 @@ const Movies = () => {
       }),
   });
 
-  if (isPending) return <div className="flex justify-center items-center">Loading...<span className="loader ml-3"></span></div>;
-  if (isError) return <div>Error: {error.message}</div>;
+  if (isPending)
+    return (
+      <div className="flex justify-center items-center text-xl">
+        Loading... <span className="loader ml-3"></span>
+      </div>
+    );
+
+  if (isError)
+    return (
+      <div className="text-center text-red-500 text-xl">
+        Error: {error.message}
+      </div>
+    );
 
   const totalResults =
     data?.total_results <= 10_000 ? data?.total_results : 10000;
@@ -72,7 +82,7 @@ const Movies = () => {
     <div className="px-4">
       <div className="mb-4">
         <Genre
-          data={genreData?.genres}
+          data={genres}
           selectedGenres={genreList}
           onToggle={handleGenre}
         />
@@ -93,7 +103,7 @@ const Movies = () => {
         </select>
       </div>
 
-      <MovieView data={data?.results} genreMap={genreData?.genres} />
+      <MovieView data={data?.results} genreMap={genreMap} />
 
       <div className="flex justify-center mt-8 dark:bg-gray-800 py-2 max-w-[600px] mx-auto rounded font-medium">
         <Pagination

@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "..";
+import type { IGenre } from "@/types";
 
 export const useGenre = () => {
-  const { data } = useQuery({
+  const { data } = useQuery<{ genres: IGenre[] }>({
     queryKey: ["genre"],
-    queryFn: () =>
-      api.get("genre/movie/list").then((res) => res.data.genres), 
+    queryFn: () => api.get("genre/movie/list").then((res) => res.data),
   });
 
-  const genreMap = data?.reduce((acc: Record<number, string>, genre: any) => {
-    acc[genre.id] = genre.name;
-    return acc;
-  }, {});
+  const genres = data?.genres || [];
 
-  return { genres: data, genreMap };
+  return {
+    genres,
+    genreMap: genres, // optional alias
+  };
 };
