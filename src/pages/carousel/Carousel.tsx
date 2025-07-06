@@ -53,7 +53,7 @@ const Carousel: React.FC<Props> = ({ genreMap }) => {
                 alt={movie.title}
                 className="w-full rounded-[16px] h-[500px] max-md:h-[400px] object-cover"
               />
-              <div className="absolute bottom-4 left-4 right-4 bg-black/60 text-white p-4 rounded-[12px]">
+              <div className="absolute bottom-4 left-4 right-4 text-white p-4 rounded-[12px]">
                 <h2 className="text-xl font-semibold text-center">
                   {movie.title}
                 </h2>
@@ -62,7 +62,7 @@ const Carousel: React.FC<Props> = ({ genreMap }) => {
                     {movie.release_date?.split("-")[0]}
                   </span>
                   <hr className="h-[15px] w-[2px] bg-gray-200 border-none" />
-                  <span className="text-gray-300">
+                  <span className="text-gray-100">
                     {movie.genre_ids
                       .map((id) => genreIdToName.get(id))
                       .filter(Boolean)
@@ -76,7 +76,7 @@ const Carousel: React.FC<Props> = ({ genreMap }) => {
                 </div>
                 <button
                   onClick={() => navigate(`/movie/${movie.id}`)}
-                  className="flex items-center justify-center gap-2 text-[18px] mx-auto mt-3 h-[50px] bg-white text-[#c61f1f] font-semibold w-[220px] rounded"
+                  className="flex items-center justify-center gap-2 text-[18px] mx-auto mt-3 h-[50px] bg-white text-[#c61f1f] font-semibold w-[220px] rounded cursor-pointer hover:text-red-500"
                 >
                   <PlayCircleFilled />
                   <p>Watch Film</p>

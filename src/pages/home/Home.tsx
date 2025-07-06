@@ -20,7 +20,7 @@ const Home = () => {
     <div>
       <Carousel genreMap={genres} />
       <MovieView
-        data={data?.results?.slice(0, 10)}
+        data={data?.results?.slice(0, 12)}
         genreMap={genres}
       />
     </div>

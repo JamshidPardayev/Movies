@@ -5,8 +5,12 @@ import { IMAGE_URL } from "@/const";
 import { useNavigate, useParams } from "react-router-dom";
 import defaultImg from "@/assets/default.jpg";
 import userImg2 from "@/assets/userImg.png";
-import { CheckCircleOutlined, StarFilled } from "@ant-design/icons";
-import { Image } from "antd";
+import {
+  CheckCircleOutlined,
+  PlayCircleFilled,
+  StarFilled,
+} from "@ant-design/icons";
+import { Image, Rate } from "antd";
 import MovieView from "@/components/movie-view/MovieView";
 
 const MoviesDetails = () => {
@@ -20,6 +24,7 @@ const MoviesDetails = () => {
   const { data: similarData } = getMovieDetailSimilars(id || "", "similar");
   const { data: imagesData } = getMovieDetailSimilars(id || "", "images");
   const { data: creditsData } = getMovieDetailSimilars(id || "", "credits");
+  console.log(data);
 
   if (!id || !data)
     return (
@@ -30,74 +35,107 @@ const MoviesDetails = () => {
 
   return (
     <div className="container">
-      {/* Movie Poster & Info */}
-      <div className="flex justify-between gap-6 max-sm:flex-col">
-        <div className="w-[50%] max-sm:w-[100%] overflow-hidden rounded border border-gray-400 dark:border-violet-700 shadow-[0px_0px_4px_2px_#999999] dark:shadow-[0px_0px_4px_2px_#a752f7] ">
-          <img
-            src={data.backdrop_path ? IMAGE_URL + data.backdrop_path : defaultImg}
-            alt={data.title}
-            className="w-full h-full object-cover rounded hover:scale-105 duration-300 cursor-pointer"
-          />
-        </div>
+      <div className="relative w-full min-h-[500px] mb-10 rounded-xl overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat dark:opacity-30 opacity-70"
+          style={{
+            backgroundImage: `url(${
+              data?.backdrop_path ? IMAGE_URL + data?.backdrop_path : defaultImg
+            })`,
+            zIndex: 0,
+          }}
+        ></div>
 
-        <div className="w-[50%] max-sm:w-[100%] flex flex-col px-2 py-1 border-gray-400 dark:border-violet-700 shadow-[0px_0px_4px_2px_#999999] dark:shadow-[0px_0px_4px_2px_#a752f7] ">
-          <h1 className="text-[28px] font-semibold">{data.title}</h1>
-          <p className="text-[18px] font-medium">{data.tagline}</p>
-          <p className="text-[15px] dark:text-gray-300 text-gray-800">{data.overview}</p>
+        <div className="relative z-10 flex justify-between gap-6 max-sm:flex-col p-4 h-full">
+          <div className="w-[30%] max-sm:w-[100%] max-sm:max-h-[400px] overflow-hidden rounded">
+            <img
+              src={
+                data?.poster_path ? IMAGE_URL + data?.poster_path : defaultImg
+              }
+              alt={data?.title}
+              className="w-full h-full object-cover rounded hover:scale-105 duration-300 cursor-pointer"
+            />
+          </div>
 
-          <div className="flex gap-x-2 flex-wrap font-medium dark:text-gray-300 text-gray-800 mt-2">
-            <span className="dark:text-white text-black">Companies:</span>
-            {data.production_companies?.map((c: any, i: number) => (
-              <div key={c.id}>
-                {c.name}
-                {i !== data.production_companies.length - 1 ? "," : ""}
+          <div className="w-[70%] max-sm:w-full flex flex-col px-2 py-1 text-black dark:text-white">
+            <h1 className="text-[32px] font-bold">{data?.title}</h1>
+            <div className="flex flex-wrap items-center gap-2 dark:text-gray-300 text-gray-950 font-medium mt-1">
+              <p>{data?.release_date}</p>
+              <hr className="h-[15px] w-[1px] bg-gray-300" />
+              <p>{data?.origin_country}</p>
+              <hr className="h-[15px] w-[1px] bg-gray-300" />
+              <div className="flex gap-2 flex-wrap">
+                {data?.genres?.map((genre: any, index: number) => (
+                  <p key={genre?.id}>
+                    {genre?.name}
+                    {index !== data.length - 1 ? "," : ""}
+                  </p>
+                ))}
               </div>
-            ))}
-          </div>
-
-          <div className="flex gap-x-2 flex-wrap font-medium dark:text-gray-300 text-gray-800 mt-1">
-            <span className="dark:text-white text-black">Countries:</span>
-            {data.production_countries?.map((c: any, i: number) => (
-              <p key={c.iso_3166_1}>
-                {c.name}
-                {i !== data.production_countries.length - 1 ? "," : ""}
-              </p>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap gap-4 dark:text-gray-300 text-gray-800 font-medium mt-1">
-            <span className="dark:text-white text-black">Release:</span>
-            <p>{data.release_date}</p>
-            <span className="dark:text-white text-black">Runtime:</span>
-            <p>
-              {Math.floor(data.runtime / 60)}h {data.runtime % 60}min
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-4 dark:text-gray-300 text-gray-800 mt-1">
-            {data.budget && (
+              <hr className="h-[15px] w-[1px] bg-gray-300" />
               <p>
-                <span className="dark:text-white text-black">Budget:</span>{" "}
-                {data.budget.toLocaleString()} $
+                {Math.floor(data?.runtime / 60)}h {data?.runtime % 60}min
               </p>
-            )}
-            {data.revenue && (
+            </div>
+            <div className="flex items-center gap-4">
               <p>
-                <span className="dark:text-white text-black">Revenue:</span>{" "}
-                {data.revenue.toLocaleString()} $
+                <Rate allowHalf defaultValue={5} />
               </p>
-            )}
-          </div>
+              <button className="flex items-center px-5 rounded gap-1 font-semibold my-1 h-[40px] bg-white text-[#c61f1f] cursor-pointer duration-300 hover:text-red-500">
+                <PlayCircleFilled />
+                Play Triller
+              </button>
+            </div>
+            <p className="text-[18px] font-medium italic">{data?.tagline}</p>
+            <p className="text-[15px] dark:text-gray-300 text-gray-950">
+              {data?.overview}
+            </p>
 
-          <div className="flex gap-8 mt-2">
-            <p className="flex gap-1 items-center">
-              {data.vote_average}
-              <StarFilled />
-            </p>
-            <p className="flex gap-1 items-center">
-              {data.vote_count}
-              <CheckCircleOutlined />
-            </p>
+            <div className="flex gap-x-2 flex-wrap font-medium dark:text-gray-300 text-gray-950 mt-2">
+              <span className="dark:text-white text-black font-bold">Companies:</span>
+              {data?.production_companies?.map((c: any, i: number) => (
+                <div key={c.id}>
+                  {c.name}
+                  {i !== data?.production_companies.length - 1 ? "," : ""}
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-x-2 flex-wrap font-medium dark:text-gray-300 text-gray-950 mt-1">
+              <span className="dark:text-white text-black font-bold">Countries:</span>
+              {data.production_countries?.map((c: any, i: number) => (
+                <p key={c.iso_3166_1}>
+                  {c.name}
+                  {i !== data.production_countries.length - 1 ? "," : ""}
+                </p>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-4 dark:text-gray-300 text-gray-950  mt-1">
+              {data.budget && (
+                <p>
+                  <span className="dark:text-white text-black font-semibold">Budget:</span>{" "}
+                  {data.budget.toLocaleString()} $
+                </p>
+              )}
+              {data.revenue && (
+                <p>
+                  <span className="dark:text-white text-black font-semibold">Revenue:</span>{" "}
+                  {data.revenue.toLocaleString()} $
+                </p>
+              )}
+            </div>
+
+            <div className="flex gap-8 mt-2">
+              <p className="flex gap-1 items-center">
+                {data.vote_average}
+                <StarFilled />
+              </p>
+              <p className="flex gap-1 items-center">
+                {data.vote_count}
+                <CheckCircleOutlined />
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -119,7 +157,9 @@ const MoviesDetails = () => {
       </div>
 
       <div className="mt-8">
-        <h2 className="text-[24px] mb-4 text-center font-semibold">Actors from the Movie</h2>
+        <h2 className="text-[24px] mb-4 text-center font-semibold">
+          Actors from the Movie
+        </h2>
         <div className="flex gap-2 overflow-x-auto custom-scroll py-2">
           {creditsData?.cast?.map((actor: any) => (
             <div
@@ -128,7 +168,9 @@ const MoviesDetails = () => {
               className="min-w-[120px] bg-white dark:bg-gray-800 p-1 rounded shadow-md text-center cursor-pointer"
             >
               <img
-                src={actor.profile_path ? IMAGE_URL + actor.profile_path : userImg2}
+                src={
+                  actor.profile_path ? IMAGE_URL + actor.profile_path : userImg2
+                }
                 alt={actor.name || "Actor image"}
                 className="w-full h-[120px] object-cover mb-2"
               />
@@ -145,7 +187,10 @@ const MoviesDetails = () => {
 
       <div className="mt-8">
         <h2 className="text-[24px] mb-2 text-center">Similar Movies</h2>
-        <MovieView data={similarData?.results?.slice(0, 4)} genreMap={genreMap} />
+        <MovieView
+          data={similarData?.results?.slice(0, 4)}
+          genreMap={genreMap}
+        />
       </div>
     </div>
   );
