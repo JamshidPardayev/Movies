@@ -8,13 +8,15 @@ const Home = () => {
   const { genres } = useGenre();
   const { getMovies } = useMovie();
 
-  const { data, isPending, isError, error } = getMovies({
+  const { data, isLoading, isError, error } = getMovies({
     page: 1,
     without_genres: "18,36,27,10749",
   });
 
-  if (isPending) return <div className="text-center text-xl">Loading... <span className="loader ml-2" /></div>;
-  if (isError) return <div className="text-center text-red-500">Error: {error.message}</div>;
+  if (isError)
+    return (
+      <div className="text-center text-red-500">Error: {error.message}</div>
+    );
 
   return (
     <div>
@@ -22,6 +24,7 @@ const Home = () => {
       <MovieView
         data={data?.results?.slice(0, 12)}
         genreMap={genres}
+        isLoading={isLoading}
       />
     </div>
   );

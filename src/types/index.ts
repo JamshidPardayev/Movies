@@ -8,11 +8,10 @@ export interface IMovie {
   vote_count: number;
   overview: string;
   original_language: string;
-  total_pages: number,
-  total_results: number,
-  release_date: string,
-  runtime: number,
-
+  total_pages: number;
+  total_results: number;
+  release_date: string;
+  runtime: number;
 }
 
 export interface IGenre {

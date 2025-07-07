@@ -23,17 +23,32 @@ const Carousel: React.FC<Props> = ({ genreMap }) => {
   const genreIdToName = new Map(genreMap?.map((g) => [g.id, g.name]));
 
   const { getMovies } = useMovie();
-  const { data } = getMovies({ sort_by: "popularity.desc" });
+  const { data, isLoading } = getMovies({ sort_by: "popularity.desc" });
   const movies: IMovie[] = data?.results?.slice(0, 10) || [];
 
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  if (!data)
+
+  const skeletonArray = new Array(4).fill(null);
+
+  if (isLoading) {
     return (
-      <div className="flex justify-center items-center text-center py-10">
-        Loading... <span className="loader ml-3"></span>
+      <div className="w-full h-[650px] max-md:h-[530px] mx-auto flex flex-col gap-5">
+        {/* Main skeleton slide */}
+        <div className="w-full h-[500px] max-md:h-[400px] rounded-[16px] bg-gray-300 dark:bg-slate-800 animate-pulse" />
+        {/* Thumbnails skeleton */}
+        <div className="flex gap-3 mt-4">
+          {skeletonArray.map((_, i) => (
+            <div
+              key={i}
+              className="w-[120px] h-[80px] max-md:h-[60px] rounded-[12px] bg-gray-300 dark:bg-slate-800 animate-pulse"
+            />
+          ))}
+        </div>
       </div>
     );
+  }
+
   return (
     <div className="w-full h-[650px] max-md:h-[530px] rounded-[16px] overflow-hidden mx-auto">
       <Swiper
@@ -71,8 +86,7 @@ const Carousel: React.FC<Props> = ({ genreMap }) => {
                   <hr className="h-[15px] w-[2px] bg-gray-200 border-none" />
                   <span className="uppercase text-gray-300">
                     {movie.original_language}
-                  </span>{" "}
-                  <br />
+                  </span>
                 </div>
                 <button
                   onClick={() => navigate(`/movie/${movie.id}`)}

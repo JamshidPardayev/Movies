@@ -50,7 +50,7 @@ const Movies = () => {
     return options;
   };
 
-  const { data, isPending, error, isError } = getMovies({
+  const { data, isLoading, error, isError } = getMovies({
     page,
     with_genres: genreList.join(","),
     without_genres: "18,36,27,10749",
@@ -60,13 +60,6 @@ const Movies = () => {
         "primary_release_date.lte": `${lte}-12-31`,
       }),
   });
-
-  if (isPending)
-    return (
-      <div className=" flex justify-center items-center text-xl">
-        Loading... <span className="loader ml-3"></span>
-      </div>
-    );
 
   if (isError)
     return (
@@ -85,6 +78,8 @@ const Movies = () => {
           data={genres}
           selectedGenres={genreList}
           onToggle={handleGenre}
+          isLoading={isLoading}
+          expectedCount={genres?.length || 19}
         />
       </div>
 
@@ -102,8 +97,11 @@ const Movies = () => {
           ))}
         </select>
       </div>
-
-      <MovieView data={data?.results} genreMap={genreMap} />
+      <MovieView
+        data={data?.results}
+        genreMap={genreMap}
+        isLoading={isLoading}
+      />
 
       <div className="flex justify-center mt-8 dark:bg-gray-800 py-2 max-w-[600px] mx-auto rounded font-medium">
         <Pagination
