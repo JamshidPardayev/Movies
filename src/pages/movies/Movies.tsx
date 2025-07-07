@@ -101,6 +101,7 @@ const Movies = () => {
         data={data?.results}
         genreMap={genreMap}
         isLoading={isLoading}
+        expectedCount={data?.results?.length || 20}
       />
 
       <div className="flex justify-center mt-8 dark:bg-gray-800 py-2 max-w-[600px] mx-auto rounded font-medium">

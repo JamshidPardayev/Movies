@@ -10,8 +10,8 @@ interface Props {
   data: IMovie[] | undefined;
   genreMap: IGenre[] | undefined;
   isLoading?: boolean;
+  expectedCount?: number;
 }
-
 const MovieView: FC<Props> = ({ data, genreMap, isLoading }) => {
   const genreIdToName = new Map(genreMap?.map((g) => [g.id, g.name]));
   const navigate = useNavigate();

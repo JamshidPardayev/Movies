@@ -13,6 +13,8 @@ const Favorites = () => {
     setIsLoading(false);
   }, []);
 
+  const expectedCount = favorites.length || 8;
+
   if (!isLoading && favorites.length === 0) {
     return (
       <div className="container text-center text-2xl py-10">
@@ -30,6 +32,7 @@ const Favorites = () => {
         data={favorites}
         genreMap={[]}
         isLoading={isLoading}
+        expectedCount={expectedCount}
       />
     </div>
   );

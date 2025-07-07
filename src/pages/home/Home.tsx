@@ -13,6 +13,9 @@ const Home = () => {
     without_genres: "18,36,27,10749",
   });
 
+  const slicedData = data?.results?.slice(0, 12);
+  const expectedCount = slicedData?.length || 12;
+
   if (isError)
     return (
       <div className="text-center text-red-500">Error: {error.message}</div>
@@ -22,9 +25,10 @@ const Home = () => {
     <div>
       <Carousel genreMap={genres} />
       <MovieView
-        data={data?.results?.slice(0, 12)}
+        data={slicedData}
         genreMap={genres}
         isLoading={isLoading}
+        expectedCount={expectedCount}
       />
     </div>
   );
