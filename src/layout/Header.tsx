@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "@/assets/main-logo.svg";
 import {
@@ -11,12 +12,13 @@ import {
   CloseOutlined,
 } from "@ant-design/icons";
 import "./style.css";
-import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api";
 import { useDebounce } from "@/hooks/useDebounce";
 import { IMAGE_URL } from "@/const";
-import defaultImg from "@/assets/default.jpg"
+import defaultImg from "@/assets/default.jpg";
+import { jwtDecode } from "jwt-decode";
+
 const Header = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -25,9 +27,10 @@ const Header = () => {
     return saved === "dark";
   });
 
-  const credential = localStorage.getItem("credential")
-  console.log(credential);
-  
+  const credential = localStorage.getItem("credential");
+  const decoded: any = credential ? jwtDecode(credential) : null;
+  const userImage = decoded?.picture;
+  const userName = decoded?.family_name || decoded?.name || "User";
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -59,7 +62,6 @@ const Header = () => {
   const handleTheme = () => {
     setDarkMode((prev) => !prev);
   };
-console.log(searchResults);
 
   return (
     <div className="shadow shadow-gray-400 dark:shadow-slate-900 mb-5 relative z-50">
@@ -89,7 +91,7 @@ console.log(searchResults);
           </NavLink>
         </div>
 
-        <div className="flex gap-6 items-center jus relative">
+        <div className="flex gap-6 items-center relative">
           <div
             onClick={() => setSearchOpen((prev) => !prev)}
             className="hover:text-[#C61F1F] cursor-pointer text-[20px] duration-300"
@@ -104,12 +106,23 @@ console.log(searchResults);
             {darkMode ? <SunOutlined /> : <MoonOutlined />}
           </button>
 
-          <button
-            onClick={() => navigate("/login")}
-            className="h-[45px] rounded-[10px] bg-[#C61F1F] px-5 text-white hover:bg-red-500 duration-300 font-medium max-sm:hidden"
-          >
-            Login
-          </button>
+          {credential ? (
+            <div className="flex items-center gap-2">
+              <img
+                src={userImage}
+                alt="User"
+                className="w-[40px] h-[40px] rounded-full object-cover border-2 border-[#C61F1F]"
+              />
+              <span className="text-white font-medium">{userName}</span>
+            </div>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="h-[45px] rounded-[10px] bg-[#C61F1F] px-5 text-white hover:bg-red-500 duration-300 font-medium max-sm:hidden"
+            >
+              Login
+            </button>
+          )}
 
           <div
             className="sm:hidden text-[22px] cursor-pointer hover:text-[#C61F1F] duration-300"
@@ -148,7 +161,15 @@ console.log(searchResults);
                   }}
                 >
                   <div className="flex gap-2 items-center">
-                    <img src={movie?.poster_path ? IMAGE_URL + movie?.poster_path : defaultImg} alt={movie?.title} className="w-[80px] h-[50px] rounded object-cover"/>
+                    <img
+                      src={
+                        movie?.poster_path
+                          ? IMAGE_URL + movie?.poster_path
+                          : defaultImg
+                      }
+                      alt={movie?.title}
+                      className="w-[80px] h-[50px] rounded object-cover"
+                    />
                     <h3 className="line-clamp-1">{movie?.title}</h3>
                   </div>
                 </Link>
@@ -172,6 +193,7 @@ console.log(searchResults);
             >
               <CloseOutlined />
             </button>
+
             <NavLink
               to="/"
               className="navActive flex items-center gap-2"
@@ -196,12 +218,27 @@ console.log(searchResults);
               <HeartOutlined />
               Favorites
             </NavLink>
-            <button
-              onClick={() => setMenuOpen(false)}
-              className="h-[40px] w-[90%] bg-[#C61F1F] text-white rounded-[8px] hover:bg-red-500 duration-300"
-            >
-              Login
-            </button>
+
+            {credential ? (
+              <div className="flex items-center gap-2 mt-4">
+                <img
+                  src={userImage}
+                  alt="User"
+                  className="w-[40px] h-[40px] rounded-full object-cover border-2 border-[#C61F1F]"
+                />
+                <p className="text-black font-black">{userName}</p>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate("/login");
+                }}
+                className="h-[40px] w-[90%] bg-[#C61F1F] text-white rounded-[8px] hover:bg-red-500 duration-300"
+              >
+                Login
+              </button>
+            )}
           </div>
         </div>
       )}

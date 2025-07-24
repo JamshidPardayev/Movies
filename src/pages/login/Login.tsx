@@ -4,15 +4,18 @@ import { Button, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { FacebookFilled } from "@ant-design/icons";
 import { GoogleLogin } from "@react-oauth/google";
+import useAuthStore from "@/store/zustand/useAuthStore";
 
 type FieldType = {
   username?: string;
   password?: string;
 };
 
-const Login = () => {
+const Login: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+
+  const setCredential = useAuthStore((state: any) => state.setCredential);
 
   return (
     <div className="p-6 min-h-[100vh] content-center bg-gray-950">
@@ -58,23 +61,20 @@ const Login = () => {
             </Form.Item>
           </Form>
           <div className="flex flex-col w-full gap-3">
-            {/* <button className="border text-blue-500 h-[35px] rounded-[6px] duration-300 cursor-pointer hover:text-blue-700 font-medium flex gap-2 justify-center items-center ">
-              <GoogleOutlined />
-              <span>Continue with Google</span>
-            </button> */}
             <GoogleLogin
               onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
-                localStorage.setItem(
-                  "credintial",
-                  credentialResponse.credential || ""
-                );
+                const credential = credentialResponse.credential || "";
+                console.log("Google Credential:", credential);
+
+                setCredential(credential);
+                localStorage.setItem("credential", credential);
+
+                navigate("/");
               }}
               onError={() => {
                 console.log("Login Failed");
               }}
             />
-
             <button className="border text-blue-500 h-[35px] rounded-[3px] duration-300 cursor-pointer hover:text-blue-700 font-medium flex gap-2 justify-between px-3 items-center ">
               <FacebookFilled />
               <span>Continue with Facebook</span>

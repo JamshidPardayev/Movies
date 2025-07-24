@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import type { IMovie } from "@/types";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   movie: IMovie;
@@ -8,6 +9,7 @@ interface Props {
 
 const FavoriteButton: React.FC<Props> = ({ movie }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("favorites") || "[]");
@@ -16,6 +18,13 @@ const FavoriteButton: React.FC<Props> = ({ movie }) => {
   }, [movie.id]);
 
   const toggleFavorite = () => {
+    const credential = localStorage.getItem("credential");
+
+    if (!credential) {
+      navigate("/login");
+      return;
+    }
+
     const stored = JSON.parse(localStorage.getItem("favorites") || "[]");
 
     if (isFavorite) {
