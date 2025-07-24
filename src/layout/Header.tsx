@@ -25,6 +25,10 @@ const Header = () => {
     return saved === "dark";
   });
 
+  const credential = localStorage.getItem("credential")
+  console.log(credential);
+  
+
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 500);

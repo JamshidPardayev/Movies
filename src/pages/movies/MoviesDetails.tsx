@@ -10,7 +10,7 @@ import {
   PlayCircleFilled,
   StarFilled,
 } from "@ant-design/icons";
-import { Image, Rate } from "antd";
+import { Image, Rate, Skeleton } from "antd";
 import MovieView from "@/components/movie-view/MovieView";
 
 const MoviesDetails = () => {
@@ -20,21 +20,31 @@ const MoviesDetails = () => {
   const { getMovieDetails, getMovieDetailSimilars } = useMovie();
   const { genreMap } = useGenre();
 
-  const { data } = getMovieDetails(id || "");
-  const { data: similarData } = getMovieDetailSimilars(id || "", "similar");
-  const { data: imagesData } = getMovieDetailSimilars(id || "", "images");
-  const { data: creditsData } = getMovieDetailSimilars(id || "", "credits");
-  console.log(data);
+  const { data, isLoading } = getMovieDetails(id || "");
+  const {
+    data: similarData,
+    isLoading: isSimilarLoading,
+  } = getMovieDetailSimilars(id || "", "similar");
+  const {
+    data: imagesData,
+    isLoading: isImagesLoading,
+  } = getMovieDetailSimilars(id || "", "images");
+  const {
+    data: creditsData,
+    isLoading: isCreditsLoading,
+  } = getMovieDetailSimilars(id || "", "credits");
 
-  if (!id || !data)
+  if (!id || isLoading)
     return (
-      <div className="text-2xl text-center content-center">
+      <div className="text-2xl text-center py-10">
         Loading movie details... <span className="loader ml-3"></span>
       </div>
     );
 
   return (
     <div className="container">
+   
+
       <div className="relative w-full min-h-[500px] mb-10 rounded-xl overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat dark:opacity-30 opacity-70"
@@ -68,7 +78,7 @@ const MoviesDetails = () => {
                 {data?.genres?.map((genre: any, index: number) => (
                   <p key={genre?.id}>
                     {genre?.name}
-                    {index !== data.length - 1 ? "," : ""}
+                    {index !== data?.genres.length - 1 ? "," : ""}
                   </p>
                 ))}
               </div>
@@ -111,17 +121,15 @@ const MoviesDetails = () => {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-4 dark:text-gray-300 text-gray-950  mt-1">
+            <div className="flex flex-wrap gap-4 dark:text-gray-300 text-gray-950 mt-1">
               {data.budget && (
                 <p>
-                  <span className="dark:text-white text-black font-semibold">Budget:</span>{" "}
-                  {data.budget.toLocaleString()} $
+                  <span className="dark:text-white text-black font-semibold">Budget:</span> {data.budget.toLocaleString()} $
                 </p>
               )}
               {data.revenue && (
                 <p>
-                  <span className="dark:text-white text-black font-semibold">Revenue:</span>{" "}
-                  {data.revenue.toLocaleString()} $
+                  <span className="dark:text-white text-black font-semibold">Revenue:</span> {data.revenue.toLocaleString()} $
                 </p>
               )}
             </div>
@@ -143,53 +151,67 @@ const MoviesDetails = () => {
       <div className="mt-8">
         <h2 className="text-[24px] mb-2 text-center">Scenes from the Movie</h2>
         <div className="flex gap-2 overflow-x-auto pb-2 custom-scroll">
-          {imagesData?.backdrops?.map((item: any, i: number) => (
-            <div key={i} className="w-full">
-              <Image
-                width={120}
-                src={IMAGE_URL + item.file_path}
-                alt="scene"
-                className="rounded object-cover"
-              />
-            </div>
-          ))}
+          {isImagesLoading
+            ? [...Array(6)].map((_, i) => (
+                <Skeleton.Image
+                  key={i}
+                  active
+                  style={{ width: 120, height: 80, borderRadius: 8 }}
+                />
+              ))
+            : imagesData?.backdrops?.map((item: any, i: number) => (
+                <div key={i} className="w-full">
+                  <Image
+                    width={120}
+                    src={IMAGE_URL + item.file_path}
+                    alt="scene"
+                    className="rounded object-cover"
+                  />
+                </div>
+              ))}
         </div>
       </div>
 
       <div className="mt-8">
-        <h2 className="text-[24px] mb-4 text-center font-semibold">
-          Actors from the Movie
-        </h2>
+        <h2 className="text-[24px] mb-4 text-center font-semibold">Actors from the Movie</h2>
         <div className="flex gap-2 overflow-x-auto custom-scroll py-2">
-          {creditsData?.cast?.map((actor: any) => (
-            <div
-              onClick={() => navigate(`/actor/${actor.id}`)}
-              key={actor.id}
-              className="min-w-[120px] bg-white dark:bg-gray-800 p-1 rounded shadow-md text-center cursor-pointer"
-            >
-              <img
-                src={
-                  actor.profile_path ? IMAGE_URL + actor.profile_path : userImg2
-                }
-                alt={actor.name || "Actor image"}
-                className="w-full h-[120px] object-cover mb-2"
-              />
-              <h3 className="text-md font-medium text-gray-900 dark:text-white line-clamp-1">
-                {actor.original_name}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
-                {actor.character}
-              </p>
-            </div>
-          ))}
+          {isCreditsLoading
+            ? [...Array(6)].map((_, i) => (
+                <div key={i} className="min-w-[120px] p-1">
+                  <Skeleton.Avatar active size={120} shape="square" />
+                  <Skeleton.Input active size="small" className="mt-2" />
+                </div>
+              ))
+            : creditsData?.cast?.map((actor: any) => (
+                <div
+                  onClick={() => navigate(`/actor/${actor.id}`)}
+                  key={actor.id}
+                  className="min-w-[120px] bg-white dark:bg-gray-800 p-1 rounded shadow-md text-center cursor-pointer"
+                >
+                  <img
+                    src={
+                      actor.profile_path ? IMAGE_URL + actor.profile_path : userImg2
+                    }
+                    alt={actor.name || "Actor image"}
+                    className="w-full h-[120px] object-cover mb-2"
+                  />
+                  <h3 className="text-md font-medium text-gray-900 dark:text-white line-clamp-1">
+                    {actor.original_name}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
+                    {actor.character}
+                  </p>
+                </div>
+              ))}
         </div>
       </div>
-
-      <div className="mt-8">
+         <div className="mt-8">
         <h2 className="text-[24px] mb-2 text-center">Similar Movies</h2>
         <MovieView
           data={similarData?.results?.slice(0, 4)}
           genreMap={genreMap}
+          isLoading={isSimilarLoading}
+          expectedCount={4}
         />
       </div>
     </div>

@@ -6,11 +6,25 @@ const Favorites = () => {
   const [favorites, setFavorites] = useState<IMovie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setIsLoading(true);
+  const loadFavorites = () => {
     const stored = JSON.parse(localStorage.getItem("favorites") || "[]");
     setFavorites(stored);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    loadFavorites();
     setIsLoading(false);
+
+    const handleStorageChange = () => {
+      loadFavorites();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   const expectedCount = favorites.length || 8;

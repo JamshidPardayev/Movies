@@ -2,7 +2,8 @@ import React from "react";
 import logo from "@/assets/main-logo.svg";
 import { Button, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { FacebookFilled, GoogleOutlined } from "@ant-design/icons";
+import { FacebookFilled } from "@ant-design/icons";
+import { GoogleLogin } from "@react-oauth/google";
 
 type FieldType = {
   username?: string;
@@ -20,7 +21,9 @@ const Login = () => {
           <Link to={"/"}>
             <img src={logo} alt="logoImg" />
           </Link>
-          <p className="text-center text-[22px] text-white max-sm:hidden">Welcome back to</p>
+          <p className="text-center text-[22px] text-white max-sm:hidden">
+            Welcome back to
+          </p>
           <button
             onClick={() => navigate("/")}
             className="text-[36px] text-white text-center cursor-pointer"
@@ -55,16 +58,38 @@ const Login = () => {
             </Form.Item>
           </Form>
           <div className="flex flex-col w-full gap-3">
-            <button className="border text-blue-500 h-[35px] rounded-[6px] duration-300 cursor-pointer hover:text-blue-700 font-medium flex gap-2 justify-center items-center ">
+            {/* <button className="border text-blue-500 h-[35px] rounded-[6px] duration-300 cursor-pointer hover:text-blue-700 font-medium flex gap-2 justify-center items-center ">
               <GoogleOutlined />
               <span>Continue with Google</span>
-            </button>
-            <button className="border text-blue-500 h-[35px] rounded-[6px] duration-300 cursor-pointer hover:text-blue-700 font-medium flex gap-2 justify-center items-center ">
+            </button> */}
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                console.log(credentialResponse);
+                localStorage.setItem(
+                  "credintial",
+                  credentialResponse.credential || ""
+                );
+              }}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+            />
+
+            <button className="border text-blue-500 h-[35px] rounded-[3px] duration-300 cursor-pointer hover:text-blue-700 font-medium flex gap-2 justify-between px-3 items-center ">
               <FacebookFilled />
               <span>Continue with Facebook</span>
+              <div></div>
             </button>
           </div>
-          <p className="text-white py-3">If you not have accaount! <button onClick={()=> navigate("/register")} className="text-blue-500 cursor-pointer duration-300 hover:text-blue-700 hover:underline">Register</button></p>
+          <p className="text-white py-3">
+            If you not have accaount!{" "}
+            <button
+              onClick={() => navigate("/register")}
+              className="text-blue-500 cursor-pointer duration-300 hover:text-blue-700 hover:underline"
+            >
+              Register
+            </button>
+          </p>
         </div>
       </div>
     </div>
