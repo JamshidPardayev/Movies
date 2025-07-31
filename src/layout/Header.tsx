@@ -31,6 +31,7 @@ const Header = () => {
   const decoded: any = credential ? jwtDecode(credential) : null;
   const userImage = decoded?.picture;
   const userName = decoded?.family_name || decoded?.name || "User";
+console.log(credential);
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -226,7 +227,7 @@ const Header = () => {
                   alt="User"
                   className="w-[40px] h-[40px] rounded-full object-cover border-2 border-[#C61F1F]"
                 />
-                <p className="text-black font-black">{userName}</p>
+                {/* <p className="text-black font-black">{userName}</p> */}
               </div>
             ) : (
               <button
