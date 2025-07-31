@@ -61,20 +61,23 @@ const Login: React.FC = () => {
             </Form.Item>
           </Form>
           <div className="flex flex-col w-full gap-3">
-            <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                const credential = credentialResponse.credential || "";
-                console.log("Google Credential:", credential);
+            <div className="w-full">
+              <GoogleLogin
+              
+                onSuccess={(credentialResponse) => {
+                  const credential = credentialResponse.credential || "";
+                  console.log("Google Credential:", credential);
 
-                setCredential(credential);
-                localStorage.setItem("credential", credential);
+                  setCredential(credential);
+                  localStorage.setItem("credential", credential);
 
-                navigate("/");
-              }}
-              onError={() => {
-                console.log("Login Failed");
-              }}
-            />
+                  navigate("/");
+                }}
+                onError={() => {
+                  console.log("Login Failed");
+                }}
+              />
+            </div>
             <button className="border text-blue-500 h-[35px] rounded-[3px] duration-300 cursor-pointer hover:text-blue-700 font-medium flex gap-2 justify-between px-3 items-center ">
               <FacebookFilled />
               <span>Continue with Facebook</span>

@@ -109,17 +109,17 @@ console.log(credential);
 
           {credential ? (
             <div className="flex items-center gap-2">
-              <img
+              <img  
                 src={userImage}
                 alt="User"
-                className="w-[40px] h-[40px] rounded-full object-cover border-2 border-[#C61F1F]"
+                className="w-[40px] h-[40px] rounded-full object-cover"
               />
-              <span className="text-white font-medium">{userName}</span>
+              <span className="dark:text-white text-black font-medium">{userName}</span>
             </div>
           ) : (
             <button
               onClick={() => navigate("/login")}
-              className="h-[45px] rounded-[10px] bg-[#C61F1F] px-5 text-white hover:bg-red-500 duration-300 font-medium max-sm:hidden"
+              className="h-[45px] rounded-[10px] bg-[#C61F1F] px-5 text-white hover:bg-red-500 duration-300 font-medium max-sm:h-[35px]"
             >
               Login
             </button>
@@ -220,26 +220,6 @@ console.log(credential);
               Favorites
             </NavLink>
 
-            {credential ? (
-              <div className="flex items-center gap-2 mt-4">
-                <img
-                  src={userImage}
-                  alt="User"
-                  className="w-[40px] h-[40px] rounded-full object-cover border-2 border-[#C61F1F]"
-                />
-                {/* <p className="text-black font-black">{userName}</p> */}
-              </div>
-            ) : (
-              <button
-                onClick={() => {
-                  setMenuOpen(false);
-                  navigate("/login");
-                }}
-                className="h-[40px] w-[90%] bg-[#C61F1F] text-white rounded-[8px] hover:bg-red-500 duration-300"
-              >
-                Login
-              </button>
-            )}
           </div>
         </div>
       )}
